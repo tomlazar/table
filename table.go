@@ -22,6 +22,7 @@ type Config struct {
 func DefaultConfig() *Config {
 	return &Config{
 		ShowIndex:       true,
+		Color:           true,
 		AlternateColors: true,
 		TitleColorCode:  ansi.ColorCode("white+buf"),
 		AltColorCodes: []string{
@@ -31,7 +32,7 @@ func DefaultConfig() *Config {
 	}
 }
 
-// Table is the struct used to define the structure, this can be used from a zero state, or infered using the
+// Table is the struct used to define the structure, this can be used from a zero state, or inferred using the
 // reflection based methods
 type Table struct {
 	c *Config
@@ -64,8 +65,9 @@ func (t Table) WriteTable(w io.Writer) error {
 		fmt.Fprintf(w, " %-*s  ", spacing[i], header)
 	}
 	if t.c.Color {
-		fmt.Fprintln(w, ansi.Reset)
+		fmt.Fprint(w, ansi.Reset)
 	}
+	fmt.Fprintln(w)
 
 	for n, row := range t.Rows {
 		if t.c.Color && t.c.AlternateColors {
@@ -78,8 +80,9 @@ func (t Table) WriteTable(w io.Writer) error {
 			fmt.Fprintf(w, " %-*s  ", spacing[i], v)
 		}
 		if t.c.Color && t.c.AlternateColors {
-			fmt.Fprintln(w, ansi.Reset)
+			fmt.Fprint(w, ansi.Reset)
 		}
+		fmt.Fprintln(w)
 	}
 
 	return nil
