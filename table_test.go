@@ -23,7 +23,7 @@ func TestTable_WriteTable(t *testing.T) {
 			{"but this one is longer", "shorter now"},
 		},
 	}
-	err := tab.WriteTable(&buf)
+	err := tab.WriteTable(&buf, nil)
 	r.NoError(err)
 
 	lines := strings.Split(buf.String(), "\n")
@@ -56,7 +56,7 @@ func TestTable_WriteLargeTable(t *testing.T) {
 		tab.Rows = append(tab.Rows, []string{"x"})
 	}
 
-	err := tab.WriteTable(&buf)
+	err := tab.WriteTable(&buf, nil)
 	r.NoError(err)
 	r.Contains(buf.String(), "[ ID]", "id header should have a space in it")
 }
@@ -71,7 +71,7 @@ func TestTable_WriteEmptyTable(t *testing.T) {
 		Headers: []string{"something"},
 		Rows:    [][]string{},
 	}
-	err := tab.WriteTable(&buf)
+	err := tab.WriteTable(&buf, nil)
 	r.NoError(err)
 	r.Equal(2, len(strings.Split(buf.String(), "\n")))
 }

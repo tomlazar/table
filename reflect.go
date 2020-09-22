@@ -21,16 +21,16 @@ func Marshal(arr interface{}, c *Config) ([]byte, error) {
 
 // MarshalTo writes the reflected table into the passed in io.Writer
 func MarshalTo(w io.Writer, arr interface{}, c *Config) error {
-	tab, err := parse(arr, c)
+	tab, err := parse(arr)
 	if err != nil {
 		return err
 	}
 
-	return tab.WriteTable(w)
+	return tab.WriteTable(w, c)
 }
 
 // parse is the main method for refletion right now
-func parse(arr interface{}, c *Config) (*Table, error) {
+func parse(arr interface{}) (*Table, error) {
 	v := reflect.ValueOf(arr)
 	if v.Kind() != reflect.Slice {
 		return nil, errors.New("arr must be a slice")
@@ -43,7 +43,6 @@ func parse(arr interface{}, c *Config) (*Table, error) {
 	head := v.Index(0)
 
 	tab := Table{
-		c:       c,
 		Headers: make([]string, head.NumField()),
 		Rows:    make([][]string, v.Len()),
 	}

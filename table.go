@@ -10,11 +10,11 @@ import (
 
 // Config is the
 type Config struct {
-	ShowIndex       bool
-	Color           bool
-	AlternateColors bool
-	TitleColorCode  string
-	AltColorCodes   []string
+	ShowIndex       bool     // shows the index/row number as the first column
+	Color           bool     // use the color codes in the output
+	AlternateColors bool     // alternate the colors when writing
+	TitleColorCode  string   // the ansi code for the title row
+	AltColorCodes   []string // the ansi codes to alternate between
 }
 
 // DefaultConfig returns the default config for table, if its ever left null in a method this will be the one
@@ -35,16 +35,14 @@ func DefaultConfig() *Config {
 // Table is the struct used to define the structure, this can be used from a zero state, or inferred using the
 // reflection based methods
 type Table struct {
-	c *Config
-
 	Headers []string
 	Rows    [][]string
 }
 
 // WriteTable writes the defined table to the writer passed in
-func (t Table) WriteTable(w io.Writer) error {
-	if t.c == nil {
-		t.c = DefaultConfig()
+func (t Table) WriteTable(w io.Writer, c *Config) error {
+	if c == nil {
+		c = DefaultConfig()
 	}
 
 	spacing := t.spacing()
@@ -55,31 +53,31 @@ func (t Table) WriteTable(w io.Writer) error {
 		idLen = d
 	}
 
-	if t.c.Color {
-		fmt.Fprint(w, t.c.TitleColorCode)
+	if c.Color {
+		fmt.Fprint(w, c.TitleColorCode)
 	}
-	if t.c.ShowIndex {
+	if c.ShowIndex {
 		fmt.Fprintf(w, " [%*v]  ", idLen, "ID")
 	}
 	for i, header := range t.Headers {
 		fmt.Fprintf(w, " %-*s  ", spacing[i], header)
 	}
-	if t.c.Color {
+	if c.Color {
 		fmt.Fprint(w, ansi.Reset)
 	}
 	fmt.Fprintln(w)
 
 	for n, row := range t.Rows {
-		if t.c.Color && t.c.AlternateColors {
-			fmt.Fprint(w, t.c.AltColorCodes[n%len(t.c.AltColorCodes)])
+		if c.Color && c.AlternateColors {
+			fmt.Fprint(w, c.AltColorCodes[n%len(c.AltColorCodes)])
 		}
-		if t.c.ShowIndex {
+		if c.ShowIndex {
 			fmt.Fprintf(w, " [%*v]  ", idLen, n)
 		}
 		for i, v := range row {
 			fmt.Fprintf(w, " %-*s  ", spacing[i], v)
 		}
-		if t.c.Color && t.c.AlternateColors {
+		if c.Color && c.AlternateColors {
 			fmt.Fprint(w, ansi.Reset)
 		}
 		fmt.Fprintln(w)
