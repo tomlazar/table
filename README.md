@@ -24,6 +24,7 @@ For creating a table yourself using the struct.
 	}
 	err := tab.WriteTable(w, nil) // w is any io.Writer
 ```
+![simple example](_examples/simple.png)
 
 With a struct slice 
 ```go
@@ -40,6 +41,8 @@ With a struct slice
     err := table.MarshalTo(w, data, nil) // writes to any w = io.Writer
     buf, err := table.Marshal(data, nil) // also supports return the bytes
 ```
+![reflection](_examples/reflection.png)
+
 
 The nil parameter is the configuration for the table, this can be set manually, but if its left as nil the deafult config settings will be used.
 ```go
