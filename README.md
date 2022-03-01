@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/tomlazar/table/branch/main/graph/badge.svg?token=F96DTCC4MC)](undefined)
 [![GoDoc](https://godoc.org/github.com/tomlazar/table?status.svg)](http://godoc.org/github.com/tomlazar/table)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tomlazar/table)](https://goreportcard.com/report/github.com/tomlazar/table)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftomlazar%2Ftable.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftomlazar%2Ftable?ref=badge_shield)
 
 Print out tabular data on the command line using the ansi color esacape codes. Support for writing the ouput based on the fields in a struct and for defining and creating the table manully using the underlying object.
 
@@ -67,6 +68,9 @@ $ go get github.com/mattn/go-colorable
 ## License
 
 MIT
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftomlazar%2Ftable.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftomlazar%2Ftable?ref=badge_large)
 
 ## Author 
 
