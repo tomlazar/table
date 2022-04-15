@@ -8,13 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestTable_WriteTable(t *testing.T) {
-	r := require.New(t)
-
-	var buf bytes.Buffer
-
-	// write the table
-	tab := Table{
+func TestingTable() Table {
+	return Table{
 		Headers: []string{"something", "another"},
 		Rows: [][]string{
 			{"1", "2"},
@@ -23,6 +18,15 @@ func TestTable_WriteTable(t *testing.T) {
 			{"but this one is longer", "shorter now"},
 		},
 	}
+}
+
+func TestTable_WriteTable(t *testing.T) {
+	r := require.New(t)
+
+	var buf bytes.Buffer
+
+	// write the table
+	tab := TestingTable()
 	err := tab.WriteTable(&buf, nil)
 	r.NoError(err)
 
@@ -47,11 +51,7 @@ func TestTable_WriteLargeTable(t *testing.T) {
 	var buf bytes.Buffer
 
 	// write the table
-	tab := Table{
-		Headers: []string{"something"},
-		Rows:    [][]string{},
-	}
-
+	tab := TestingTable()
 	for i := 0; i < 200; i++ {
 		tab.Rows = append(tab.Rows, []string{"x"})
 	}
@@ -67,11 +67,27 @@ func TestTable_WriteEmptyTable(t *testing.T) {
 	var buf bytes.Buffer
 
 	// write the table
-	tab := Table{
-		Headers: []string{"something"},
-		Rows:    [][]string{},
-	}
+	tab := TestingTable()
 	err := tab.WriteTable(&buf, nil)
 	r.NoError(err)
-	r.Equal(2, len(strings.Split(buf.String(), "\n")))
+	r.Equal(6, len(strings.Split(buf.String(), "\n")))
+}
+
+func TestTable_WriteColorNoAlts(t *testing.T) {
+	r := require.New(t)
+
+	var buf bytes.Buffer
+
+	// write the table
+	tab := TestingTable()
+	c := Config{
+		ShowIndex:       true,
+		Color:           true,
+		AlternateColors: true,
+		AltColorCodes:   nil,
+		TitleColorCode:  "",
+	}
+	err := tab.WriteTable(&buf, &c)
+	r.NoError(err)
+	r.Equal(6, len(strings.Split(buf.String(), "\n")))
 }
