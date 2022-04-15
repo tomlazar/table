@@ -68,8 +68,9 @@ func (t Table) WriteTable(w io.Writer, c *Config) error {
 	}
 	fmt.Fprintln(w)
 
+	color := c.Color && c.AlternateColors && len(c.AltColorCodes) > 1
 	for n, row := range t.Rows {
-		if c.Color && c.AlternateColors {
+		if color {
 			fmt.Fprint(w, c.AltColorCodes[n%len(c.AltColorCodes)])
 		}
 		if c.ShowIndex {
@@ -78,7 +79,7 @@ func (t Table) WriteTable(w io.Writer, c *Config) error {
 		for i, v := range row {
 			fmt.Fprintf(w, "  %s", runewidth.FillRight(v, spacing[i]))
 		}
-		if c.Color && c.AlternateColors {
+		if color {
 			fmt.Fprint(w, ansi.Reset)
 		}
 		fmt.Fprintln(w)
